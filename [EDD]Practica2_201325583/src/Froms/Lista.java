@@ -10,8 +10,12 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,6 +24,7 @@ import javax.swing.JOptionPane;
  */
 public class Lista extends javax.swing.JFrame {
     private Principal p;
+    private String pathImg = "";
     public static OkHttpClient webClient = new OkHttpClient();
     /**
      * Creates new form Lista
@@ -66,6 +71,9 @@ public class Lista extends javax.swing.JFrame {
         jbagregar = new javax.swing.JButton();
         jbborrar = new javax.swing.JButton();
         jbbuscar = new javax.swing.JButton();
+        labelReporte = new javax.swing.JLabel();
+        recargar = new javax.swing.JButton();
+        generar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -107,45 +115,78 @@ public class Lista extends javax.swing.JFrame {
             }
         });
 
+        recargar.setFont(new java.awt.Font("Comic Sans MS", 0, 13)); // NOI18N
+        recargar.setText("Recargar Img");
+        recargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recargarActionPerformed(evt);
+            }
+        });
+
+        generar.setFont(new java.awt.Font("Comic Sans MS", 0, 13)); // NOI18N
+        generar.setText("generar Img");
+        generar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(78, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtborrar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(72, 72, 72))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtborrar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jbagregar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(129, 129, 129))
+                        .addGap(57, 57, 57))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jbborrar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(129, 129, 129))
+                        .addGap(57, 57, 57))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jbbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(124, 124, 124))))
+                        .addGap(52, 52, 52)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(labelReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(generar)
+                        .addGap(18, 18, 18)
+                        .addComponent(recargar)
+                        .addGap(102, 102, 102))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(txtAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(jbagregar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(txtborrar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(jbborrar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addComponent(txtbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(jbbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(txtAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(jbagregar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(txtborrar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(jbborrar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(txtbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(jbbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(labelReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(recargar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(generar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
@@ -160,7 +201,16 @@ public class Lista extends javax.swing.JFrame {
             String print = getString("agregarSimple", rb);
             //System.out.println(print);
             txtAgregar.setText("");
+            
+                    RequestBody rb2 = new FormEncodingBuilder()
+                    .add("dato", "unico")
+                    .build();
+            String recorrido = getString("recorrerSimple", rb2);
+            String pathTxt = generarTxt("listaSimple", recorrido);
+            pathImg = generarImagen(pathTxt, "listaSimple");
+            
             JOptionPane.showMessageDialog(null, "palabra " + print + " agregado");
+            //Metodos.eliminar_image_txt(pathTxt, pathImg);
         }
     }//GEN-LAST:event_jbagregarActionPerformed
 
@@ -202,6 +252,25 @@ public class Lista extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jbborrarActionPerformed
 
+    private void recargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recargarActionPerformed
+        // TODO add your handling code here:
+            labelReporte.setIcon(new ImageIcon(Metodos.icono(pathImg, labelReporte.getWidth(), labelReporte.getHeight())));
+            labelReporte.setIcon(new ImageIcon(Metodos.icono(pathImg, labelReporte.getWidth(), labelReporte.getHeight())));
+                        
+//            System.out.println(recorrido);
+    }//GEN-LAST:event_recargarActionPerformed
+
+    private void generarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generarActionPerformed
+        // TODO add your handling code here:
+        RequestBody rb2 = new FormEncodingBuilder()
+                    .add("dato", "unico")
+                    .build();
+            String recorrido = getString("recorrerSimple", rb2);
+            String pathTxt = generarTxt("listaSimple", recorrido);
+            pathImg = generarImagen(pathTxt, "listaSimple");
+            System.out.println(recorrido);
+    }//GEN-LAST:event_generarActionPerformed
+
     public static String getString(String metodo, RequestBody formBody) {
 
         try {
@@ -218,10 +287,51 @@ public class Lista extends javax.swing.JFrame {
         return null;
     }
     
+    public String generarTxt(String path, String in){
+        File f = new File("C:\\txtDot\\" + path + ".txt");//"C:\\Users\\usuario\\Desktop\\ejemplo.txt");//, nodos + "}");
+        try{
+                FileWriter fw = new FileWriter(f, false);
+                BufferedWriter br = new BufferedWriter(fw);
+                br.write(in);
+                br.close();
+                fw.close();
+        }catch(Exception e){
+            
+        }
+        return f.getPath();
+    }
+    
+    public String generarImagen(String pathTxt, String nombreImg){
+        String pathImagen = "";
+        try{
+            String dopath = "C:\\release\\bin\\dot.exe";
+            String architxt = pathTxt; //"C:\\txtDot\\" + path + ".txt";//path;//"C:\\Users\\usuario\\Desktop\\ejemplo.txt";
+            pathImagen = "C:\\imgDot\\" + nombreImg + ".png";
+            String parpng = "-Tpng";
+            String paro = "-o";
+               
+            String cmd[] = new String[5];
+            cmd[0] = dopath;
+            cmd[1] = parpng;
+            cmd[2] = architxt;
+            cmd[3] = paro;
+            cmd[4] = pathImagen;
+              
+            Runtime rt = Runtime.getRuntime();
+            rt.exec(cmd);
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+        return pathImagen;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton generar;
     private javax.swing.JButton jbagregar;
     private javax.swing.JButton jbborrar;
     private javax.swing.JButton jbbuscar;
+    private javax.swing.JLabel labelReporte;
+    private javax.swing.JButton recargar;
     private javax.swing.JTextField txtAgregar;
     private javax.swing.JTextField txtborrar;
     private javax.swing.JTextField txtbuscar;

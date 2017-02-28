@@ -8,7 +8,20 @@ class Simple():
 		self.raiz = None
 		self.actual = None
 		self.size = 0
+		self.digraph = "digraph ejemplo{"
 		print("simple")
+
+	def reiniciarDigraph(self, dato):
+		self.digraph = "digraph ejemplo{"
+		return self.digraph
+
+	def recorrer(self, raizs, dato):
+		var = ""
+		while raizs != None:
+			if raizs.sig != None:
+				var = var + "\n" + str(raizs.dato) + "->" + str(raizs.sig.dato)
+			raizs = raizs.sig
+		return str(self.digraph + var + "}")
 
 	def agregar(self, dato):
 		if self.raiz == None:
@@ -49,6 +62,11 @@ class Simple():
 						if aux.sig == temp:
 							aux.sig = temp.sig
 							self.size = self.size - 1
+							if temp == self.actual:
+								if aux.sig != None:
+									self.actual = aux.sig
+								else:
+									self.actual = aux
 							return str(temp.dato)
 						aux = aux.sig
 				else:
@@ -63,7 +81,19 @@ class Cola():
 		self.raiz = None
 		self.actual = None
 		self.size = 0
+		self.digraph = "digraph ejemplo{"
 		print("cola")
+
+	def reiniciarDigraph(self, dato):
+		self.digraph = "digraph ejemplo{"
+
+	def recorrer(self, raizs, dato):
+		var = ""
+		while raizs != None:
+			if raizs.sig != None:
+				var = var + "\n" + str(raizs.dato) + "->" + str(raizs.sig.dato)
+			raizs = raizs.sig
+		return str(self.digraph + var + "}")
 
 	def add(self, dato):
 		if self.raiz == None:
@@ -80,20 +110,32 @@ class Cola():
 	def desencolar(self, dato):
 		temp = self.raiz
 		if self.raiz != None:
+			temp = self.raiz
 			self.raiz = self.raiz.sig
 			self.size = self.size - 1
+			if temp == self.actual:
+				self.actual = self.raiz
 			return str(temp.dato)
 		else:
 			return str("NO SE ENCONTRO EL DATO")
 
-#----------------------------------------------------------------Clase nodo-------------------------------------------------------------------------
+#----------------------------------------------------------------Clase pila-------------------------------------------------------------------------
 class Pila():
 	"""docstring for Pila"""
 	def __init__(self):
 		self.raiz = None
 		self.actual = None
 		self.size = 0
+		self.digraph = "digraph ejemplo{"
 		print("Pila")
+
+	def recorrer(self, raizs, dato):
+		var = ""
+		while raizs != None:
+			if raizs.sig != None:
+				var = var + "\n" + str(raizs.dato) + "->" + str(raizs.sig.dato)
+			raizs = raizs.sig
+		return str(self.digraph + var + "}")
 
 	def pushsPila(self, dato):
 		if self.raiz == None:
@@ -132,6 +174,23 @@ class Nodo():
 	def __init__(self, dato_n, sig_n):
 		self.dato = dato_n
 		self.sig = sig_n
+
+#----------------------------------------------------------------Clase nodo_D-------------------------------------------------------------------------
+
+class Nodo_D():
+	def __init__(self, dato_n):
+		self.dato = dato_n
+		self.arriba = None
+		self.abajo = None
+		self.izq = None
+		self.der = None
+		self.atras = None
+		self.enfrente = None
+
+#----------------------------------------------------------------Cabeza Dispersa-------------------------------------------------------------------------
+
+
+
 #----------------------------------------------------------------fin clases-------------------------------------------------------------------------
 simple = Simple()
 cola = Cola()
@@ -143,6 +202,12 @@ def addSimple():
 	dato = str(request.form["dato"])
 	aux = simple.agregar(dato)
 	return dato + " " + aux
+
+@app.route('/recorrerSimple',methods=['POST']) 
+def recorrerSimple():
+	dato = str(request.form["dato"])
+	aux = simple.recorrer(simple.raiz, dato)
+	return aux
 
 @app.route("/buscarSimple", methods=['POST'])
 def searchSimple():
@@ -168,6 +233,12 @@ def deQueueCola():
 	aux = cola.desencolar(dato)
 	return aux
 
+@app.route('/recorrerCola',methods=['POST']) 
+def recorrerCola():
+	dato = str(request.form["dato"])
+	aux = cola.recorrer(cola.raiz, dato)
+	return aux
+
 @app.route("/pushPila", methods=['POST'])
 def pushPila():
 	dato = str(request.form["dato"])
@@ -178,6 +249,12 @@ def pushPila():
 def popPila():
 	dato = str(request.form["dato"])
 	aux = pila.popsPila(dato)
+	return aux
+
+@app.route('/recorrersPila',methods=['POST']) 
+def recorrersPila():
+	dato = str(request.form["dato"])
+	aux = pila.recorrer(pila.raiz, dato)
 	return aux
 
 if __name__ == '__main__':

@@ -12,6 +12,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,6 +21,7 @@ import javax.swing.JOptionPane;
  */
 public class Cola extends javax.swing.JFrame {
     private Principal p;
+    private String pathImg = "";
     /**
      * Creates new form Cola
      * @param p
@@ -62,8 +64,12 @@ public class Cola extends javax.swing.JFrame {
         txtunico = new javax.swing.JTextField();
         jbque = new javax.swing.JButton();
         jbdeq = new javax.swing.JButton();
+        labelReporte = new javax.swing.JLabel();
+        recargar = new javax.swing.JButton();
+        generar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(713, 305));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 cerrado(evt);
@@ -89,6 +95,22 @@ public class Cola extends javax.swing.JFrame {
             }
         });
 
+        recargar.setFont(new java.awt.Font("Comic Sans MS", 0, 13)); // NOI18N
+        recargar.setText("Recargar Img");
+        recargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recargarActionPerformed(evt);
+            }
+        });
+
+        generar.setFont(new java.awt.Font("Comic Sans MS", 0, 13)); // NOI18N
+        generar.setText("generarImg");
+        generar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -96,25 +118,42 @@ public class Cola extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addComponent(txtunico, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(123, 123, 123)
+                        .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jbdeq, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jbque, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(72, Short.MAX_VALUE))
+                            .addComponent(txtunico, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(55, 55, 55)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jbdeq, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jbque, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(generar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(recargar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(43, 43, 43)))
+                .addComponent(labelReporte, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(txtunico, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(jbque, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(jbdeq, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtunico, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(jbque, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(jbdeq, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(recargar)
+                        .addGap(18, 18, 18)
+                        .addComponent(generar)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(labelReporte, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -129,13 +168,30 @@ public class Cola extends javax.swing.JFrame {
     private void jbqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbqueActionPerformed
         // TODO add your handling code here:
         if(!txtunico.getText().equals("")){
-            RequestBody rb = new FormEncodingBuilder()
-                .add("dato", txtunico.getText())
-                .build();
-            String print = getString("queueCola", rb);
-            //System.out.println(print);
-            JOptionPane.showMessageDialog(null, "valor numerico: "+ txtunico.getText());//+ " indice " + print + " agregado");
-            txtunico.setText("");
+            int x = -1;
+            try{
+                x = Integer.parseInt(txtunico.getText());
+            }catch(Exception ex){
+                
+            }
+            if(x != -1){
+                RequestBody rb = new FormEncodingBuilder()
+                    .add("dato", txtunico.getText())
+                    .build();
+                String print = getString("queueCola", rb);
+                //System.out.println(print);
+
+                RequestBody rb2 = new FormEncodingBuilder()
+                        .add("dato", "unico")
+                        .build();
+                String recorrido = Lista.getString("recorrerCola", rb2);
+                String pathTxt = Metodos.generarTxt("cola", recorrido);
+                pathImg = Metodos.generarImagen(pathTxt, "cola");
+
+                System.out.println(recorrido);
+                JOptionPane.showMessageDialog(null, "valor numerico: "+ txtunico.getText());//+ " indice " + print + " agregado");
+                txtunico.setText("");
+            }
         }
     }//GEN-LAST:event_jbqueActionPerformed
 
@@ -149,6 +205,22 @@ public class Cola extends javax.swing.JFrame {
             //JOptionPane.showMessageDialog(null, "valor numerico "+ txtunico.getText() + " indice " + print + " agregado");
             txtunico.setText("");
     }//GEN-LAST:event_jbdeqActionPerformed
+
+    private void recargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recargarActionPerformed
+        // TODO add your handling code here:
+        labelReporte.setIcon(new ImageIcon(Metodos.icono(pathImg, labelReporte.getWidth(), labelReporte.getHeight())));
+            labelReporte.setIcon(new ImageIcon(Metodos.icono(pathImg, labelReporte.getWidth(), labelReporte.getHeight())));
+    }//GEN-LAST:event_recargarActionPerformed
+
+    private void generarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generarActionPerformed
+        // TODO add your handling code here:
+        RequestBody rb2 = new FormEncodingBuilder()
+                    .add("dato", "unico")
+                    .build();
+            String recorrido = Lista.getString("recorrerCola", rb2);
+            String pathTxt = Metodos.generarTxt("cola", recorrido);
+            pathImg = Metodos.generarImagen(pathTxt, "cola");
+    }//GEN-LAST:event_generarActionPerformed
 
     public static String getString(String metodo, RequestBody formBody) {
 
@@ -167,8 +239,11 @@ public class Cola extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton generar;
     private javax.swing.JButton jbdeq;
     private javax.swing.JButton jbque;
+    private javax.swing.JLabel labelReporte;
+    private javax.swing.JButton recargar;
     private javax.swing.JTextField txtunico;
     // End of variables declaration//GEN-END:variables
 }
