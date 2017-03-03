@@ -48,6 +48,11 @@ public class Principal extends javax.swing.JFrame {
 
         jbMatriz.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
         jbMatriz.setText("Matriz Dispersa");
+        jbMatriz.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbMatrizActionPerformed(evt);
+            }
+        });
 
         jbMatriz1.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
         jbMatriz1.setText("Cola");
@@ -121,6 +126,13 @@ public class Principal extends javax.swing.JFrame {
         l.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jbMatriz2ActionPerformed
+
+    private void jbMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbMatrizActionPerformed
+        // TODO add your handling code here:
+        MatrizDispersa l = new MatrizDispersa(this);
+        l.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jbMatrizActionPerformed
 
     /**
      * @param args the command line arguments
