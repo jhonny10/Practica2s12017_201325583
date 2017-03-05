@@ -7,6 +7,7 @@ package Froms;
 
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,6 +22,7 @@ public class MatrizDispersa extends javax.swing.JFrame {
      * @param p
      */
     public MatrizDispersa(Principal p) {
+        this.p = p;
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -60,9 +62,9 @@ public class MatrizDispersa extends javax.swing.JFrame {
         btnDominio = new javax.swing.JButton();
         txtAgregar = new javax.swing.JTextField();
         txtEliminar = new javax.swing.JTextField();
-        txtEliminar1 = new javax.swing.JTextField();
+        txtletra = new javax.swing.JTextField();
         txtEliminar2 = new javax.swing.JTextField();
-        lbl1 = new javax.swing.JLabel();
+        labelReporte = new javax.swing.JLabel();
         jbgenerar = new javax.swing.JButton();
         jbrecargar = new javax.swing.JButton();
 
@@ -111,8 +113,8 @@ public class MatrizDispersa extends javax.swing.JFrame {
         txtEliminar.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
         txtEliminar.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        txtEliminar1.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
-        txtEliminar1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtletra.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
+        txtletra.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         txtEliminar2.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
         txtEliminar2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -140,7 +142,7 @@ public class MatrizDispersa extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(txtEliminar1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtletra, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -166,7 +168,7 @@ public class MatrizDispersa extends javax.swing.JFrame {
                                 .addComponent(jbgenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jbrecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(16, 16, 16)
-                .addComponent(lbl1, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                .addComponent(labelReporte, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -181,7 +183,7 @@ public class MatrizDispersa extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(jbeliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(txtEliminar1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtletra, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(btnletra, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
@@ -195,7 +197,7 @@ public class MatrizDispersa extends javax.swing.JFrame {
                 .addContainerGap(25, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(lbl1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelReporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -234,10 +236,51 @@ public class MatrizDispersa extends javax.swing.JFrame {
 
     private void jbagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregarActionPerformed
         // TODO add your handling code here:
+        if(!txtAgregar.getText().equals("")){
+            String var[] = txtAgregar.getText().split("@");
+            
+            if(var.length == 2){
+                try{        
+                    String dato = var[0]; //palabra
+                    String dato2 = var[1];//dominio
+
+                    RequestBody rb = new FormEncodingBuilder()
+                        .add("dato", dato2)
+                        .add("dato2", dato)
+                        .build();
+
+                    String agregado = Lista.getString("agregarDispersa", rb);
+                    System.out.println(agregado);
+                    
+                    RequestBody rb2 = new FormEncodingBuilder()
+                        .add("dato", "unico")
+                        .build();
+                    
+                    String recorrido = Lista.getString("recorrerMatriz", rb2);
+                    System.out.println(recorrido);
+                    
+                    String pathTxt = Metodos.generarTxt("matrizDispersa", recorrido);
+                    pathImg = Metodos.generarImagen(pathTxt, "matrizDispersa");
+                }catch(Exception ex){
+                    System.out.println(ex.getMessage());
+                }
+            }
+        }
     }//GEN-LAST:event_jbagregarActionPerformed
 
     private void btnletraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnletraActionPerformed
         // TODO add your handling code here:
+        if(!txtletra.getText().equals("")){
+            RequestBody rb2 = new FormEncodingBuilder()
+                .add("dato", txtletra.getText())
+                .build();
+                    
+            String recorrido = Lista.getString("recorrerLetra", rb2);
+            System.out.println(recorrido);
+            
+            String pathTxt = Metodos.generarTxt("matrizLetra", recorrido);
+                    pathImg = Metodos.generarImagen(pathTxt, "matrizLetra");
+        }
     }//GEN-LAST:event_btnletraActionPerformed
 
     private void btnDominioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDominioActionPerformed
@@ -250,28 +293,8 @@ public class MatrizDispersa extends javax.swing.JFrame {
 
     private void jbrecargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbrecargarActionPerformed
         // TODO add your handling code here:
-        String correo = txtAgregar.getText();
-        
-        if(!correo.equals("")){
-            try{
-                String var[] = correo.split("@");
-        
-                String dato = var[0];
-                String dato2 = var[1];
-                
-                RequestBody rb2 = new FormEncodingBuilder()
-                    .add("dato", dato2)
-                    .add("dato2", dato)
-                    .build();
-                
-                String recorrido = Lista.getString("agregarDispersa", rb2);
-                System.out.println(recorrido);
-//                String pathTxt = Metodos.generarTxt("cola", recorrido);
-//                pathImg = Metodos.generarImagen(pathTxt, "cola");
-            }catch(Exception ex){
-                System.out.println(ex.getMessage());
-            }
-        }
+        labelReporte.setIcon(new ImageIcon(Metodos.icono(pathImg, labelReporte.getWidth(), labelReporte.getHeight())));
+            labelReporte.setIcon(new ImageIcon(Metodos.icono(pathImg, labelReporte.getWidth(), labelReporte.getHeight())));
     }//GEN-LAST:event_jbrecargarActionPerformed
 
     private void cerrando(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_cerrando
@@ -287,10 +310,10 @@ public class MatrizDispersa extends javax.swing.JFrame {
     private javax.swing.JButton jbeliminar;
     private javax.swing.JButton jbgenerar;
     private javax.swing.JButton jbrecargar;
-    private javax.swing.JLabel lbl1;
+    private javax.swing.JLabel labelReporte;
     private javax.swing.JTextField txtAgregar;
     private javax.swing.JTextField txtEliminar;
-    private javax.swing.JTextField txtEliminar1;
     private javax.swing.JTextField txtEliminar2;
+    private javax.swing.JTextField txtletra;
     // End of variables declaration//GEN-END:variables
 }

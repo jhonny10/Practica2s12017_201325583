@@ -9,7 +9,7 @@ class Simple():
 		self.actual = None
 		self.size = 0
 		self.digraph = "digraph ejemplo{"
-		print("simple")
+		#print("simple")
 
 	def reiniciarDigraph(self, dato):
 		self.digraph = "digraph ejemplo{"
@@ -83,7 +83,7 @@ class Cola():
 		self.actual = None
 		self.size = 0
 		self.digraph = "digraph ejemplo{"
-		print("cola")
+		#print("cola")
 
 	def reiniciarDigraph(self, dato):
 		self.digraph = "digraph ejemplo{"
@@ -128,7 +128,7 @@ class Pila():
 		self.actual = None
 		self.size = 0
 		self.digraph = "digraph ejemplo{"
-		print("Pila")
+		#print("Pila")
 
 	def recorrer(self, raizs, dato):
 		var = ""
@@ -205,6 +205,12 @@ class Vertical_Dispersa():
 			self.fin = self.inicio
 			return str("agregado en y")
 		else:
+			nodotemp = self.inicio
+			while nodotemp != None:
+				varTemp = ord(nodotemp.dato)
+				varDato = ord(dato_n)
+
+				nodotemp = nodotemp.abajo
 			temp = self.fin
 			self.fin.abajo = Nodo_D(dato_n)
 			self.fin = self.fin.abajo
@@ -281,53 +287,14 @@ class Horizontal_Dispersa():
 			temp = temp.der
 		return var
 
-#----------------------------------------------------------------Cabeza Dispersa pos x------------------------------------------------------------------------
-class InclinadaDispersa():
-	def __init__(self):
-		self.inicio = None
-		self.fin = None
-		self.z = 1
-
-	def agregarZ(self, dato):
-		if self.inicio == None:
-			self.inicio = Nodo_D(dato)
-			self.inicio.z = self.z
-			self.z = self.z + 1
-			self.fin = self.inicio
-			return str("agregado en z")
-		else:
-			temp = self.fin
-			self.fin.atras = Nodo_D(dato)
-			self.fin = self.fin.atras
-			self.fin.z = self.z
-			self.z = self.z + 1
-			self.fin.enfrente = temp
-			return str("agregado en z")
-
-	def buscarAtras(self, dato_n):
-		temp = self.inicio
-		while temp != None:
-			if temp.dato == dato_n:
-				return temp
-			temp = temp.atras
-		return None
-
-	def recorrerAtras(self, dato_n):
-		var = ""
-		temp = self.inicio
-		while temp != None:
-			if temp.dato == dato_n:
-				var = var + "\n" + str(temp.dato)
-			temp = temp.atras
-		return var
-
 #----------------------------------------------------------------Lateral Dispersa pos y-------------------------------------------------------------------------
 class MatrizDispersa():
 
 	def __init__(self):
-		print("Matriz Dispersa")
+		#print("Matriz Dispersa")
 		self.enx = Horizontal_Dispersa()
 		self.eny = Vertical_Dispersa()
+		self.digraph = "digraph ejemplo{"
 
 	def retorno(self, nodo):
 		var = ""
@@ -363,114 +330,266 @@ class MatrizDispersa():
 
 		return var
 
-	def ingresoDato(self, dominio, palabra):
+	def agregarDispersa(self, dominio, palabra):
 		letra = palabra[0]
 		tempx = self.enx.buscarH(dominio)
-		tempy = self.eny.buscarLetraAbajo(letra) #verifica si hay una letra "L" de la palabra
-		#tempz = self.enz.buscarZ(palabra)
+		tempy = self.eny.buscarLetraAbajo(letra)
 
-		if tempy == None: #por que no existe le letra especificada
-			self.eny.agregarV(letra) #agrega la letra en vertical
-			auxy = self.eny.buscarLetraAbajo(letra) #busca letra vertical y se obtiene para uso
-			if tempx == None: #por que no existe el dominio
-				self.enx.agregarH(dominio) #se agrega el dominio
-				auxx = self.enx.buscarH(dominio) #se vuelve a buscar el dominio
+		if tempy == None: #verifica no se encontro la letra especificada
+			self.eny.agregarV(letra) #agrega la letra
+			tempy = self.eny.buscarLetraAbajo(letra) #como ya se ingreso 1 entonces se vuelve a buscar no tiene que ser None
 
-				while auxx.abajo != None: #revisar si se encuentra la palabra para abajo del dominio
-					auxx = auxx.abajo
-				auxx.abajo = Nodo_D(palabra)
-				tempAux = auxx
-				auxx = auxx.abajo
-				auxx.arriba = tempAux
-				auxx.izq = auxy
-				auxy.der = auxx
-				#var = str(auxx.dato)+ "->"+str(auxx.arriba.dato)+ "\n"+ str(auxx.dato) + "->" + str(auxx.abajo.dato) + "\n" + str(auxx.dato) + "->" + str(auxx.izq.dato) + " " + str(aux.dato) + "->" + str(aux.der.dato)
-				return self.retorno(auxx)
-			else: #si existe el dominio
-				auxx = tempx #buscar el dominio
+		if tempx == None: #verifica si se encontro el dominio especificado
+			self.enx.agregarH(dominio) #agrega el dominio
+			tempx = self.enx.buscarH(dominio) #como ya se ingreso 1 entonces se vuelve a buscar no tiene que ser None
+		
+		nodoNuevo = Nodo_D(palabra)#es el nuevo nodo a ingresar
+		#ahora verificar si el dominio esta vacio
+		#print(tempy)
+		nodobusqueda = self.verificarExiste(tempx, tempy.y, letra)
 
-				while auxx.abajo != None: #revisar si se encuentra la palabra para abajo del dominio
-					auxx = auxx.abajo
-				auxx.abajo = Nodo_D(palabra)
-				tempAux = auxx
-				auxx = auxx.abajo
-				auxx.arriba = tempAux
-				auxx.izq = auxy
-				auxy.der = auxx
-				return self.retorno(auxx)
-		else: #si existe la letra especificada
-			auxy = self.eny.buscarLetraAbajo(letra)
-			if tempx == None:
-				self.enx.agregarH(dominio) #se agrega el dominio
-				auxx = self.enx.buscarH(dominio) #se vuelve a buscar el dominio
+		if nodobusqueda != None:
 
-				while auxx.abajo != None: #revisar si se encuentra la palabra para abajo del dominio
-					auxx = auxx.abajo
+			while nodobusqueda.atras != None:
+				nodobusqueda = nodobusqueda.atras
 
-				while auxy.der != None:
-					auxy = auxy.der
+			nodoNuevo.z = nodobusqueda.z + 1
+			nodoNuevo.x = nodobusqueda.x
+			nodoNuevo.y = nodobusqueda.y
+			nodoNuevo.enfrente = nodobusqueda
+			nodobusqueda.atras = nodoNuevo
+			print("nodo busqueda es != None")
+		else:
+			nodoNuevo.x = tempx.x
+			nodoNuevo.y = tempy.y
 
-				auxx.abajo = Nodo_D(palabra)
-				tempAux = auxx
-				auxx = auxx.abajo
-				auxx.arriba = tempAux
-				auxx.izq = auxy
-				auxy.der = auxx
-				return self.retorno(auxx)
-			
+			nodoEncima = self.verificarNodoEncima(tempx, tempy.y)
+			nodoAbajo = self.verificaNodoAbajo(tempx, tempy.y)
+			nodoizq = self.verificarNodoIzq(tempy, tempx.x)
+			nodoDer = self.verificarNodoDer(tempy, tempx.x)
+
+			if nodoEncima != None:
+				nodoNuevo.arriba = nodoEncima
+				nodoEncima.abajo = nodoNuevo
 			else:
-				auxDom = tempx.abajo
-				nodoTemp = None
-				while auxDom != None: #buscar hasta encontrar la primera letra de la palabra
-					if auxDom.dato[0] == letra:
-						break
-					nodoTemp = auxDom
-					auxDom = auxDom.abajo
-				#si auxDom no existe
-				if auxDom != None:
-					#ahora recorrer hacia atras
-					while auxDom.atras != None:
-						auxDom = auxDom.atras
+				nodoNuevo.arriba = tempx
+				tempx.abajo = nodoNuevo
 
-					auxTemp = auxDom
-					auxDom.atras = Nodo_D(palabra)
-					auxDom = auxDom.atras
-					auxDom.enfrente = auxTemp
-					return self.retorno(auxDom)
-				else:
-					if nodoTemp != None:
-						nodoT1 = tempy.der #nodoT1 es el nodo que esta mas a la derecha
-						nodoTemp.abajo = Nodo_D(palabra)
-						nodoT2 = nodoTemp #nodoT2 es el nodo de actual del nodoTemp antes de pasar al de abajo
-						nodoTemp = nodoTemp.abajo
-						nodoTemp.arriba = nodoT2
-						nodoTemp.der = nodoT1
-						nodoT1.izq = #visualizar bien esto falta en medio de datos
+			if nodoAbajo != None:
+				nodoNuevo.abajo = nodoAbajo
+				nodoAbajo.arriba = nodoNuevo
 
-				"""cuando existe el dominio y la letra"""
-			#recorrer en para la der
+			if nodoDer != None:
+				nodoNuevo.der = nodoDer
+				nodoDer.izq = nodoNuevo
+
+			if nodoizq != None:
+				nodoNuevo.izq = nodoizq
+				nodoizq.der = nodoNuevo
+			else:
+				nodoNuevo.izq = tempy
+				tempy.der = nodoNuevo
+			#print(nodoEncima)
+			#print(nodoAbajo)
+			#print(nodoizq)
+			#print(nodoDer)
+		return self.retorno(nodoNuevo)
+
+	def verificarExiste(self, dominio, poxy, letra):#verifica si existe un nodo en el dominio con la letra especificada
+		nodotemp = dominio.abajo
+		while nodotemp != None:
+			if nodotemp.dato[0] == letra:
+				break
+			nodotemp = nodotemp.abajo
+		return nodotemp
+
+	def verificarNodoEncima(self, dominio, posy):#si no existe un nodo encima entoces enlazar directamente con el nodo
+		nodotemp = dominio#.abajo
+		cont = posy - 1
+		while nodotemp.abajo != None:
+			#if nodotemp.abajo != None:
+			if nodotemp.abajo.y > cont:
+				return nodotemp
+			nodotemp = nodotemp.abajo
+		return nodotemp
+
+	def verificaNodoAbajo(self, dominio, posy):#si no existe entonces ingresar nodo como si no tuviera un nodo abajo
+		nodoEncima = self.verificarNodoEncima(dominio, posy)
+		cont = posy + 1
+		if nodoEncima != None:
+			while nodoEncima != None:
+				if nodoEncima.y >= cont:
+					break
+					#verificar
+				nodoEncima = nodoEncima.abajo
+			return nodoEncima
+		else:
+			nodoEncima = dominio
+			while nodoEncima != None:
+				if nodoEncima.y >= cont:
+					break
+					#verificar
+				nodoEncima = nodoEncima.abajo
+			return nodoEncima
+
+	def verificarNodoIzq(self, tempy, posx): #verifica desde la nodo de la letra
+		nodotemp = tempy
+		cont = posx - 1
+		while nodotemp.der != None:
+			#if nodotemp.der != None:
+			if nodotemp.der.x > cont:
+				return nodotemp
+			nodotemp = nodotemp.der
+		return nodotemp
+
+	def verificarNodoDer(self, tempy, posx):
+		nodo = self.verificarNodoIzq(tempy, posx)
+		cont = posx + 1
+		if nodo != None:
+			while nodo != None:
+				if nodo.x >= cont:
+					break
+					#verificar
+				nodo = nodo.der
+			return nodo
+		else:
+			nodo = tempy
+			while nodo != None:
+				if nodo.x >= cont:
+					break
+					#verificar
+				nodo = nodo.der
+			return nodo
+
+	def recorrido(self, dato):
+		var2 = self.recorrerEny()
+		var1 = self.recorrerEnx()
+		
+		return self.digraph + var1 + var2 + "}"
+
+	def recorrerEnx(self):#inicia el recorrido desde vertical y  y recorre de derecha a izquierda
+		var = ""
+		tempy = self.eny.inicio
+
+		while tempy != None:
+			nodoAbajo = tempy.abajo
+
+			if nodoAbajo != None:
+				var = var + "\n" + str(tempy.dato) + "->" + str(nodoAbajo.dato) + ";"
+				var = var + "\n" + str(nodoAbajo.dato) + "->" + str(tempy.dato) + ";"
+
+			nodoy = tempy
+
+			while nodoy != None:
+				nodoDer = nodoy.der
+
+				if nodoDer != None:
+					var = var + "\n" + str(nodoy.dato) + "->" + str(nodoDer.dato) + ";"
+					var = var + "\n" + str(nodoDer.dato) + "->" + str(nodoy.dato) + ";"
+
+				nodoz = nodoy
+
+				while nodoz != None:
+					nodoAtras = nodoz.atras
+					nodoEnfrente = nodoz.enfrente
+
+					if nodoAtras != None:
+						var = var + "\n" + str(nodoz.dato) + "->" + str(nodoAtras.dato) + ";"
+						var = var + "\n" + str(nodoAtras.dato) + "->" + str(nodoz.dato) + ";"
+
+					nodoz = nodoz.atras
+				nodoy = nodoy.der
+			tempy = tempy.abajo
+		return var
+
+	def recorrerEny(self):#inicia el recorrido desde horizontal x  y recorre de arriba y abajo
+		var = ""
+		tempx = self.enx.inicio
+
+		while tempx != None:
+			nodoDer = tempx.der
+
+			if nodoDer != None:
+				var = var + "\n" + str(tempx.dato) + "->" + str(nodoDer.dato) + ";"
+				var = var + "\n" + str(nodoDer.dato) + "->" + str(tempx.dato) + ";"
+
+			nodox = tempx
+
+			while nodox != None:
+				nodoAbajo = nodox.abajo
+
+				if nodoAbajo != None:
+					var = var + "\n" + str(nodox.dato) + "->" + str(nodoAbajo.dato) + ";"
+					var = var + "\n" + str(nodoAbajo.dato) + "->" + str(nodox.dato) + ";"
+				nodox = nodox.abajo
+			tempx = tempx.der
+		return var
+
+	def buscarLetra(self, letra):
+		tempy = self.eny.inicio
+
+		while tempy != None:
+			if tempy.dato == letra:
+				return tempy
+			tempy = tempy.abajo
+
+	def recorridoPorLetra(self, letra):
+		var = ""
+		nodoTemp = self.buscarLetra(letra)
+		while nodoTemp != None:
+			nodoDer = nodoTemp.der
+			if nodoDer != None:
+				var = var + "\n" + str(nodoTemp.dato) + "->" + str(nodoDer.dato) + ";"
+				var = var + "\n" + str(nodoDer.dato) + "->" + str(nodoTemp.dato) + ";"
+			nodoTemp = nodoTemp.der
+		return self.digraph + var + "}"
+
 #----------------------------------------------------------------fin clases-------------------------------------------------------------------------
 simple = Simple()
 cola = Cola()
 pila = Pila()
 matriz = MatrizDispersa()
 
-verDis = Vertical_Dispersa()
-horiD = Horizontal_Dispersa()
-intcD = InclinadaDispersa()
+"""print(matriz.agregarDispersa("g", "a1"))
+print(matriz.agregarDispersa("f", "c1"))
+print(matriz.agregarDispersa("y", "a2"))
+print(matriz.agregarDispersa("y", "c2"))
+print(matriz.agregarDispersa("g", "m1"))
+print(matriz.agregarDispersa("g", "m2"))
+print(matriz.agregarDispersa("y", "m3"))
+print(matriz.agregarDispersa("y", "m3"))
+print(matriz.agregarDispersa("g", "c28"))
+print(matriz.agregarDispersa("f", "a29"))
+print(matriz.agregarDispersa("f", "m34"))
 
-print(matriz.ingresoDato("dominio1", "dato1"))
-print(matriz.ingresoDato("dominio1", "dato2"))
-print(matriz.ingresoDato("dominio1", "dato3"))
-print(matriz.ingresoDato("dominio2", "dato0"))
-print(matriz.ingresoDato("dominio2", "mesa"))
-print(matriz.ingresoDato("dominio1", "melodia"))
+print(matriz.recorridoPorLetra("m"))"""
+"""print(matriz.agregarDispersa("hola", "hola1"))
+print(matriz.agregarDispersa("hola", "hola2"))
+
+print(matriz.recorrido("datonulo"))"""
+"""var = ""
+var = chr(66)
+
+var1 = "A"
+print(ord(var1))"""
+
+@app.route('/recorrerLetra',methods=['POST'])
+def recorrerLetra():
+	dato = str(request.form["dato"])
+	aux = matriz.recorridoPorLetra(dato)
+	return aux
+
+@app.route('/recorrerMatriz',methods=['POST'])
+def recorrerMatriz():
+	dato = str(request.form["dato"])
+	aux = matriz.recorrido(dato)
+	return aux
 
 @app.route('/agregarDispersa',methods=['POST'])
 def agregarDispersa():
-	dato = str(request.form["dato"])
-	dato2 = str(request.form["dato2"])
-	aux = matriz.ingresoDato(dato, dato2)
+	dato = str(request.form["dato"])#dato = dominio
+	dato2 = str(request.form["dato2"])#dato2 = palabra
+	aux = matriz.agregarDispersa(dato, dato2)
 	return aux
 
 @app.route('/agregarSimple',methods=['POST']) 
