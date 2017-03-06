@@ -63,7 +63,7 @@ public class MatrizDispersa extends javax.swing.JFrame {
         txtAgregar = new javax.swing.JTextField();
         txtEliminar = new javax.swing.JTextField();
         txtletra = new javax.swing.JTextField();
-        txtEliminar2 = new javax.swing.JTextField();
+        txtDominio = new javax.swing.JTextField();
         labelReporte = new javax.swing.JLabel();
         jbgenerar = new javax.swing.JButton();
         jbrecargar = new javax.swing.JButton();
@@ -116,8 +116,8 @@ public class MatrizDispersa extends javax.swing.JFrame {
         txtletra.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
         txtletra.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        txtEliminar2.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
-        txtEliminar2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtDominio.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
+        txtDominio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         jbgenerar.setFont(new java.awt.Font("Comic Sans MS", 0, 13)); // NOI18N
         jbgenerar.setText("Generar img");
@@ -154,7 +154,7 @@ public class MatrizDispersa extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(76, 76, 76)
                                 .addComponent(jbagregar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(txtEliminar2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtDominio, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(76, 76, 76)
                         .addComponent(btnletra))
@@ -168,7 +168,7 @@ public class MatrizDispersa extends javax.swing.JFrame {
                                 .addComponent(jbgenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jbrecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(16, 16, 16)
-                .addComponent(labelReporte, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                .addComponent(labelReporte, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -187,7 +187,7 @@ public class MatrizDispersa extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(btnletra, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(txtEliminar2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtDominio, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(btnDominio, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
@@ -206,32 +206,50 @@ public class MatrizDispersa extends javax.swing.JFrame {
 
     private void jbeliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbeliminarActionPerformed
         // TODO add your handling code here:
-//        if(!txtAgregar.getText().equals("")){
-//            int x = -1;
-//            try{
-//                x = Integer.parseInt(txtAgregar.getText());
-//            }catch(Exception ex){
-//
-//            }
-//            if(x != -1){
-//                RequestBody rb = new FormEncodingBuilder()
-//                .add("dato", txtAgregar.getText())
-//                .build();
-//                String print = Lista.getString("queueCola", rb);
-//                //System.out.println(print);
-//
-//                RequestBody rb2 = new FormEncodingBuilder()
-//                .add("dato", "unico")
-//                .build();
-//                String recorrido = Lista.getString("recorrerCola", rb2);
-//                String pathTxt = Metodos.generarTxt("cola", recorrido);
-//                pathImg = Metodos.generarImagen(pathTxt, "cola");
-//
-//                System.out.println(recorrido);
-//                JOptionPane.showMessageDialog(null, "valor numerico: "+ txtAgregar.getText());//+ " indice " + print + " agregado");
-//            txtAgregar.setText("");
-//        }
-//        }
+        if(!txtEliminar.getText().equals("")){
+            String var[] = txtEliminar.getText().split("@");
+            try{
+                
+                System.out.println("********proceso eliminar*************");
+                String dato = var[0]; //palabra
+                    String dato2 = var[1];//dominio
+                    
+                    String valor = "";
+                    
+                    for(int i = 0 ; i < dato2.length(); i++){
+                        if(dato2.charAt(i) == (char)46){
+                            break;
+                        }
+                        valor += dato2.charAt(i);
+                    }
+
+                    RequestBody rb = new FormEncodingBuilder()
+                        .add("dato", valor)
+                        .add("dato2", dato)
+                        .build();
+
+                    String eliminar = Lista.getString("eliminar", rb);
+                    System.out.println(eliminar);
+                    
+                    RequestBody rb2 = new FormEncodingBuilder()
+                        .add("dato", "unico")
+                        .build();
+                    
+                    String recorrido = Lista.getString("recorrerMatriz", rb2);
+                    //System.out.println(recorrido);
+                    
+                    String pathTxt = Metodos.generarTxt("matrizDispersa", recorrido);
+                    pathImg = Metodos.generarImagen(pathTxt, "matrizDispersa");
+                    
+                System.out.println("********procesos eliminar*************");
+                System.out.println("");
+            }catch(Exception ex){
+                System.out.println("********Error eliminar*************");
+                System.out.println(ex.getMessage());
+                System.out.println("********Error eliminar*************");
+                System.out.println("");
+            }
+        }
     }//GEN-LAST:event_jbeliminarActionPerformed
 
     private void jbagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbagregarActionPerformed
@@ -243,13 +261,21 @@ public class MatrizDispersa extends javax.swing.JFrame {
                 try{        
                     String dato = var[0]; //palabra
                     String dato2 = var[1];//dominio
-
+                    String valor = "";
+                    
+                    for(int i = 0 ; i < dato2.length(); i++){
+                        if(dato2.charAt(i) == (char)46){
+                            break;
+                        }
+                        valor += dato2.charAt(i);
+                    }
                     RequestBody rb = new FormEncodingBuilder()
-                        .add("dato", dato2)
+                        .add("dato", valor)
                         .add("dato2", dato)
                         .build();
 
                     String agregado = Lista.getString("agregarDispersa", rb);
+                    System.out.println("*********proceso agregar************");
                     System.out.println(agregado);
                     
                     RequestBody rb2 = new FormEncodingBuilder()
@@ -258,11 +284,15 @@ public class MatrizDispersa extends javax.swing.JFrame {
                     
                     String recorrido = Lista.getString("recorrerMatriz", rb2);
                     System.out.println(recorrido);
+                    System.out.println("**********proceso agregar***********");
                     
                     String pathTxt = Metodos.generarTxt("matrizDispersa", recorrido);
                     pathImg = Metodos.generarImagen(pathTxt, "matrizDispersa");
                 }catch(Exception ex){
+                    
+                    System.out.println("********Error al agregar*************");
                     System.out.println(ex.getMessage());
+                    System.out.println("********Error al agregar*************");
                 }
             }
         }
@@ -271,24 +301,92 @@ public class MatrizDispersa extends javax.swing.JFrame {
     private void btnletraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnletraActionPerformed
         // TODO add your handling code here:
         if(!txtletra.getText().equals("")){
-            RequestBody rb2 = new FormEncodingBuilder()
+            try{
+                RequestBody rb2 = new FormEncodingBuilder()
                 .add("dato", txtletra.getText())
                 .build();
-                    
-            String recorrido = Lista.getString("recorrerLetra", rb2);
-            System.out.println(recorrido);
             
+                System.out.println("********proceso busquedad por letra*************");
+            String recorrido = Lista.getString("recorrerLetra", rb2);
+//            System.out.println("Recorrido por Letra");
+            //System.out.println(recorrido);
+            
+            RequestBody rb = new FormEncodingBuilder()
+                .add("dato", txtletra.getText())
+                .build();
+            
+            String lista = Lista.getString("recorrerLetraLista", rb);
+                System.out.println(lista);
+            
+            System.out.println("********proceso busquedad por letra*************");
+            System.out.println("");
+            //en recorrido mandar el digraph ejemplo{ rankdir = "LR" + recorrido + }
             String pathTxt = Metodos.generarTxt("matrizLetra", recorrido);
                     pathImg = Metodos.generarImagen(pathTxt, "matrizLetra");
+            }catch(Exception ex){
+                
+            System.out.println("********error busquedad por letra*************");
+                System.out.println(ex.getMessage());
+                
+            System.out.println("********error busquedad por letra*************");
+                System.out.println("");
+            }
         }
     }//GEN-LAST:event_btnletraActionPerformed
 
     private void btnDominioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDominioActionPerformed
         // TODO add your handling code here:
+        if(!txtDominio.getText().equals("")){
+                String valor = "";
+                    
+                    for(int i = 0 ; i < txtDominio.getText().length(); i++){
+                        if(txtDominio.getText().charAt(i) == (char)46){
+                            break;
+                        }
+                        valor += txtDominio.getText().charAt(i);
+                    }
+            try{
+                RequestBody rb2 = new FormEncodingBuilder()
+                .add("dato", valor)
+                .build();
+                    
+            System.out.println("********proceso busquedad por dominio*************");
+            String recorrido = Lista.getString("recorrerDominio", rb2);
+//            System.out.println("");
+//            System.out.println("Recorrido por Dominio");
+            //System.out.println(recorrido);
+             RequestBody rb = new FormEncodingBuilder()
+                .add("dato", valor)
+                .build();
+            
+            String lista = Lista.getString("recorrerDominioLista", rb);
+                System.out.println(lista);
+            
+            System.out.println("********proceso busquedad por dominio*************");
+            System.out.println("");
+            String pathTxt = Metodos.generarTxt("matrizDominio", recorrido);
+                    pathImg = Metodos.generarImagen(pathTxt, "matrizDominio");
+            }catch(Exception ex){
+                System.out.println("********error busquedad por dominio*************");
+                System.out.println(ex.getMessage());
+                System.out.println("********error busquedad por dominio*************");
+                
+                System.out.println("");
+            }
+        }
     }//GEN-LAST:event_btnDominioActionPerformed
 
     private void jbgenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbgenerarActionPerformed
         // TODO add your handling code here:
+        RequestBody rb2 = new FormEncodingBuilder()
+                        .add("dato", "unico")
+                        .build();
+                    
+                    String recorrido = Lista.getString("recorrerMatriz", rb2);
+                    //System.out.println(recorrido);
+                    
+                    String pathTxt = Metodos.generarTxt("matrizDispersa", recorrido);
+                    pathImg = Metodos.generarImagen(pathTxt, "matrizDispersa");
     }//GEN-LAST:event_jbgenerarActionPerformed
 
     private void jbrecargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbrecargarActionPerformed
@@ -312,8 +410,8 @@ public class MatrizDispersa extends javax.swing.JFrame {
     private javax.swing.JButton jbrecargar;
     private javax.swing.JLabel labelReporte;
     private javax.swing.JTextField txtAgregar;
+    private javax.swing.JTextField txtDominio;
     private javax.swing.JTextField txtEliminar;
-    private javax.swing.JTextField txtEliminar2;
     private javax.swing.JTextField txtletra;
     // End of variables declaration//GEN-END:variables
 }

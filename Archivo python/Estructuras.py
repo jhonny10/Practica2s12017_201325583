@@ -206,11 +206,6 @@ class Vertical_Dispersa():
 			return str("agregado en y")
 		else:
 			nodotemp = self.inicio
-			while nodotemp != None:
-				varTemp = ord(nodotemp.dato)
-				varDato = ord(dato_n)
-
-				nodotemp = nodotemp.abajo
 			temp = self.fin
 			self.fin.abajo = Nodo_D(dato_n)
 			self.fin = self.fin.abajo
@@ -221,6 +216,8 @@ class Vertical_Dispersa():
 
 	def buscarLetraAbajo(self, dato_n):
 		temp = self.inicio
+		varDato = ord(dato_n)
+
 		while temp != None:
 			if temp.dato == dato_n:
 				return temp
@@ -358,7 +355,7 @@ class MatrizDispersa():
 			nodoNuevo.y = nodobusqueda.y
 			nodoNuevo.enfrente = nodobusqueda
 			nodobusqueda.atras = nodoNuevo
-			print("nodo busqueda es != None")
+			#print("nodo busqueda es != None")
 		else:
 			nodoNuevo.x = tempx.x
 			nodoNuevo.y = tempy.y
@@ -393,7 +390,7 @@ class MatrizDispersa():
 			#print(nodoAbajo)
 			#print(nodoizq)
 			#print(nodoDer)
-		return self.retorno(nodoNuevo)
+		return "Nodo Agregado" #self.retorno(nodoNuevo)
 
 	def verificarExiste(self, dominio, poxy, letra):#verifica si existe un nodo en el dominio con la letra especificada
 		nodotemp = dominio.abajo
@@ -532,6 +529,16 @@ class MatrizDispersa():
 			if tempy.dato == letra:
 				return tempy
 			tempy = tempy.abajo
+		return tempy
+
+	def buscarDominio(self, dominio):
+		tempx = self.enx.inicio
+
+		while tempx != None:
+			if tempx.dato == dominio:
+				return tempx
+			tempx = tempx.der
+		return tempx
 
 	def recorridoPorLetra(self, letra):
 		var = ""
@@ -541,8 +548,136 @@ class MatrizDispersa():
 			if nodoDer != None:
 				var = var + "\n" + str(nodoTemp.dato) + "->" + str(nodoDer.dato) + ";"
 				var = var + "\n" + str(nodoDer.dato) + "->" + str(nodoTemp.dato) + ";"
+				nodoZ = nodoDer
+
+				while nodoZ != None:
+					nodoAtras = nodoZ.atras
+					if nodoAtras != None:
+						var = var + "\n" + str(nodoZ.dato) + "->" + str(nodoAtras.dato) + ";"
+						var = var + "\n" + str(nodoAtras.dato) + "->" + str(nodoZ.dato) + ";"
+					nodoZ = nodoZ.atras
 			nodoTemp = nodoTemp.der
-		return self.digraph + var + "}"
+		return self.digraph + "rankdir = LR;" + var + "}"
+
+	def recorridoPorLetraLista(self, letra):
+		var = ""
+		nodoTemp = self.buscarLetra(letra)
+
+		while nodoTemp != None:
+			nodoz = nodoTemp
+			while nodoz != None:
+				var = var + str(nodoz.dato) + ","
+				nodoz = nodoz.atras
+			nodoTemp = nodoTemp.der
+		return var
+
+	def recorridoPorDominioLista(self, dominio):
+		var = ""
+		nodoTemp = self.buscarDominio(dominio)
+
+		while nodoTemp != None:
+			nodoz = nodoTemp
+			while nodoz != None:
+				var = var + str(nodoz.dato) + ","
+				nodoz = nodoz.atras
+			nodoTemp = nodoTemp.abajo
+		return var
+
+	def recorridoPorDominio(self, dominio):
+		var = ""
+		nodoTemp = self.buscarDominio(dominio)
+		while nodoTemp != None:
+			nodoAbajo = nodoTemp.abajo
+			if nodoAbajo != None:
+				var = var + "\n" + str(nodoTemp.dato) + "->" + str(nodoAbajo.dato) + ";"
+				var = var + "\n" + str(nodoAbajo.dato) + "->" + str(nodoTemp.dato) + ";"
+			nodoTemp = nodoTemp.abajo
+			nodoZ = nodoTemp
+
+			while nodoZ != None:
+				nodoAtras = nodoZ.atras
+				if nodoAtras != None:
+					var = var + "\n" + str(nodoZ.dato) + "->" + str(nodoAtras.dato) + ";"
+					var = var + "\n" + str(nodoAtras.dato) + "->" + str(nodoZ.dato) + ";"
+				nodoZ = nodoZ.atras
+		return self.digraph + "rankdir = LR;" + var + "}"
+
+	def eliminarCorreo(self, dominio, palabra):
+		nodoDom = self.buscarDominio(dominio)
+		if nodoDom != None:
+			nodoPalabra = self.existePalabra(nodoDom.abajo, palabra)
+			print(nodoPalabra)
+			if nodoPalabra != None:
+				nodoArriba = nodoPalabra.arriba
+				nodoAbajo = nodoPalabra.abajo
+				nodoIzq = nodoPalabra.izq
+				nodoDer = nodoPalabra.der
+				nodoEnfrente = nodoPalabra.enfrente
+				nodoAtras = nodoPalabra.atras
+
+				print(nodoArriba)
+				print(nodoAbajo)
+				print(nodoIzq)
+				print(nodoDer)
+				print(nodoEnfrente)
+				print(nodoAtras)
+
+				if nodoArriba == None and nodoAbajo == None and nodoIzq == None and nodoDer == None:
+					if nodoEnfrente != None:
+						nodoEnfrente.atras = nodoAtras
+					if nodoAtras != None:
+						nodoAtras.enfrente = nodoEnfrente
+					return "nodo en la posicion z ha sido eliminado"
+				else:
+					if nodoAtras != None:
+						nodoArriba.abajo = nodoAtras
+						nodoAtras.arriba = nodoArriba
+
+						nodoAtras.izq = nodoIzq
+						nodoIzq.der = nodoAtras
+
+						if nodoAbajo != None:
+							nodoAbajo.arriba = nodoAtras
+							nodoAtras.abajo = nodoAbajo
+
+						if nodoDer != None:
+							nodoDer.izq = nodoAtras
+							nodoAtras.der = nodoDer
+						nodoAtras.enfrente = nodoEnfrente
+						self.reiniciarZ(nodoAtras)
+						return "nodo en la primera posicion ha sido eliminido nuevo nodo es el de atras"
+					else:
+						nodoArriba.abajo = nodoAbajo
+						nodoIzq.der = nodoDer
+						if nodoAbajo != None:
+							nodoAbajo.arriba = nodoArriba
+						if nodoDer != None:
+							nodoDer.izq = nodoIzq
+							return "nodo esta en la primera pos en z"
+				return "correo existe"
+			else:
+				return "correo no existe"
+		else:
+			return "dominio no existe"
+
+	def existePalabra(self, dominio, palabra):
+		nodotemp = dominio
+		while nodotemp != None:
+			nodoz = nodotemp
+			while nodoz != None:
+				if nodoz.dato == palabra:
+					return nodoz
+				nodoz = nodoz.atras
+			nodotemp = nodotemp.abajo
+		return nodotemp
+
+	def reiniciarZ(self, nodotemp):
+		z = 1
+		nodo = nodotemp
+		while nodo != None:
+			nodo.z = z
+			nodo = nodo.atras
+			z = z + 1
 
 #----------------------------------------------------------------fin clases-------------------------------------------------------------------------
 simple = Simple()
@@ -572,6 +707,31 @@ var = chr(66)
 
 var1 = "A"
 print(ord(var1))"""
+@app.route('/eliminar',methods=['POST'])
+def eliminar():
+	dato = str(request.form["dato"])#dominio
+	dato2 = str(request.form["dato2"])#palabra
+
+	aux = matriz.eliminarCorreo(dato, dato2)
+	return aux
+
+@app.route('/recorrerDominio',methods=['POST'])
+def recorrerDominio():
+	dato = str(request.form["dato"])
+	aux = matriz.recorridoPorDominio(dato)
+	return aux
+
+@app.route('/recorrerDominioLista',methods=['POST'])
+def recorrerDominioLista():
+	dato = str(request.form["dato"])
+	aux = matriz.recorridoPorDominioLista(dato)
+	return aux
+
+@app.route('/recorrerLetraLista',methods=['POST'])
+def recorrerLetraLista():
+	dato = str(request.form["dato"])
+	aux = matriz.recorridoPorLetraLista(dato)
+	return aux
 
 @app.route('/recorrerLetra',methods=['POST'])
 def recorrerLetra():
